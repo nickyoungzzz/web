@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+    <script src="http://apps.bdimg.com/libs/prototype/1.7.1.0/prototype.js">
+    </script>
+    <script src="./tree.js"></script>
+    <script type="text/javascript">
+
+        function clock(x, y, r) {
+
+            var c = document.getElementById('mycanvas');
+            if (c.getContext) {
+                var ctx = c.getContext('2d');
+                ctx.beginPath();
+                // ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                // ctx.fill();
+                ctx.arc(x, y, r, 0, 2 * Math.PI);
+
+                var size = 2 * Math.PI / 12;
+                var size1 = 2 * Math.PI / 60;
+                for (let index = 0; index < 12; index++) {
+
+                    var a = x + r * Math.sin(index * size);
+
+                    var b = y - r * Math.cos(index * size);
+
+                    var m = a - 10 * Math.sin(index * size);
+
+                    var n = b + 10 * Math.cos(index * size);
+
+                    var j = a - 20 * Math.sin(index * size);
+
+                    var k = b + 20 * Math.cos(index * size);
+                    ctx.moveTo(a, b);
+                    ctx.lineTo(m, n);
+                    if (index == 0) {
+                        ctx.fillText(12, j, k);
+                    }
+                    else {
+                        ctx.fillText(index, j, k);
+                    }
+
+                }
+                ctx.stroke();
+                ctx.save();
+
+                window.setInterval(function () {
+
+                    var t = new Date();
+                    var h = t.getHours();
+                    var m = t.getMinutes();
+                    var s = t.getSeconds();
+
+                    ctx.beginPath();
+                    ctx.clearRect(150, 150, 100, 100);
+                    ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    if (h >= 12) {
+                        h -= 12;
+                    }
+
+
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 40 * Math.sin(m * size1), y - 40 * Math.cos(m * size1));
+
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 30 * Math.sin(h * size + m / 60 * size), y - 30 * Math.cos(h * size + m / 60 * size));
+
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 50 * Math.sin(s * size1), y - 50 * Math.cos(s * size1));
+
+                    ctx.stroke();
+                }, 1000);
+
+            }
+            else {
+                alert("no");
+            }
+
+        }
+
+        function gravity() {
+            var c = document.getElementById('mycanvas');
+            var t = 0;
+            var hv = 0;
+            var startV = 0;
+            var start = true;
+            var lastY = 0;
+            var g = 10;
+            var ctx = c.getContext('2d');
+
+            function Ball(x, y, v, r) {
+                this.x = x;
+                this.y = y;
+                this.v = v;
+                this.r = r;
+            }
+
+            Ball.prototype.draw = function () {
+                ctx.beginPath();
+                ctx.clearRect(0, 0, 800, 800);
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+            var draw = function () {
+
+                var ball = setInterval(function () {
+
+                    // if (startV <= 0 && !start) {
+                    //     return;
+                    // }
+                    // start = false;
+                    t += 16;
+                    ctx.beginPath();
+                    var direct = startV > 0 ? -1 : 1;
+                    var b = new Ball(20 + hv * t / 1000, lastY + direct * (startV * t / 1000 + g * Math.pow(t / 1000, 2) / 2 + 10), startV + direct * g * t / 1000, 10);
+                    if (b.y + 10 >= 800 || b.v == 0) {
+                        clearInterval(ball);
+                        startV = b.v;
+                        lastY = b.y;
+                        t = 0;
+                        draw();
+                        return;
+                    }
+
+                    b.draw();
+                }, 16);
+            }
+
+            draw();
+
+        }
+
+        function circle(x, y, r) {
+            var t = 0;
+            var c = document.getElementById('mycanvas');
+            var ctx = c.getContext('2d');
+
+            var c = setInterval(function () {
+
+                var distance = t / 1000 * 2 * Math.PI / 10;
+                // if (distance >= 2 * Math.PI) {
+                //     clearInterval(c);
+                //     ctx.save();
+                //     t = 0;
+                //     circle(x + 100, y, r, 1);
+                // }
+                // var X = x + Math.sin(distance) * d;
+                // var Y = y - Math.cos(distance) * d;
+
+                var X = x + 160 * Math.pow(Math.sin(distance), 3) / 2;
+                var Y = y - (130 * Math.cos(distance) - 50 * Math.cos(2 * distance) - 20 * Math.cos(3 * distance) - Math.cos(4 * distance)) / 2;
+
+                ctx.beginPath();
+                ctx.clearRect(0, 0, 800, 800);
+                ctx.arc(X, Y, r, 0, 2 * Math.PI);
+                ctx.fill();
+                t = t + 16;
+            }, 16);
+
+        }
+
+        function lizi() {
+
+
+            function Ball(x, y, r, d) {
+
+                var t = 0;
+
+                Ball.prototype.draw = function () {
+
+                    var c = document.getElementById('mycanvas');
+                    var ctx = c.getContext('2d');
+
+                    var e = setInterval(function () {
+
+                        var distance = t / 1000 * 2 * Math.PI / 2;
+
+                        var X = x + Math.sin(distance) * d;
+                        var Y = y - Math.cos(distance) * d;
+
+                        // var X = x + 160 * Math.pow(Math.sin(distance), 3) / 2;
+                        // var Y = y - (130 * Math.cos(distance) - 50 * Math.cos(2 * distance) - 20 * Math.cos(3 * distance) - Math.cos(4 * distance)) / 2;
+                        ctx.beginPath();
+                        // ctx.clearRect(0, 0, 800, 800);
+                        // ctx.restore();
+                        ctx.arc(X, Y, r, 0, 2 * Math.PI);
+                        ctx.stroke();
+                        t = t + 16;
+                    }, 16);
+                }
+            }
+            var ball = new Ball(300, 300, 30, 100);
+            ball.draw();
+
+        }
+
+
+        function sin(x, y, r) {
+            var t = 0;
+
+            var c = document.getElementById('mycanvas');
+            var ctx = c.getContext('2d');
+            var c = setInterval(function () {
+
+                var distance = t * 2 * Math.PI / 4;
+                ctx.beginPath();
+                var X = distance + x;
+                var Y = 100 * Math.sin(distance / 20) + y;
+                ctx.arc(X, Y, r, 0, 2 * Math.PI);
+                ctx.fill();
+                t = t + 0.25;
+            }, 16);
+        }
+
+        function bub(r, arc, v, x, y) {
+            var t = 0;
+            var a = x;
+            var b = y;
+            var c = document.getElementById('mycanvas');
+            var ctx = c.getContext('2d');
+            var vx = v * Math.cos(arc);
+            var vy = v * Math.sin(arc);
+
+            setInterval(function () {
+
+                if (a - r <= 0 || a + r >= 800) {
+
+                    vx = -vx;
+                    // t = 0;
+                }
+                else if (b + r >= 800 || b - r <= 0) {
+                    vy = -vy;
+                    // t = 0;
+                }
+
+                a += vx * t / 1000;
+                b += vy * t / 1000;
+                draw();
+
+                t += 16;
+            }, 16);
+
+            var draw = function () {
+                ctx.beginPath();
+                ctx.clearRect(0, 0, 800, 800);
+                ctx.arc(a, b, r, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+        }
+
+        function bTree() {
+
+            var input = document.getElementById('node');
+            var ok = document.getElementById('ok');
+            var cancel = document.getElementById('cancel');
+            var c = document.getElementById('mycanvas');
+            var ctx = c.getContext('2d');
+            const arr = [2, 1, 4, 3, 9, 7, 6, 11, 8, 5, 13, 12];
+            // var tree = run(arr);
+            var tree = new Tree();
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+        
+            // tree.draw1(function (e) {
+            //     draw(e);
+            // });
+
+            ok.onclick = function () {
+                tree.add(Number(input.value));
+                input.value = '';
+                ctx.clearRect(0, 0, c.width, c.height);
+                tree.draw1(function (e) {
+                    draw(e);
+                });
+            }
+
+            cancel.onclick = function () {
+
+                try
+                {
+                    tree.delete(Number(input.value));
+                } catch (e)
+                {
+                    alert(e);
+                }
+                input.value = '';
+                ctx.clearRect(0, 0, c.width, c.height);
+                tree.draw1(function (e) {
+                    draw(e);
+                });
+            }
+
+            function draw(e) {
+                ctx.restore();
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, 20, 0, 2 * Math.PI, true);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.strokeText(e.value, e.x + 1, e.y + 5, 20);
+
+                if (e.parent != null) {
+                    ctx.beginPath();
+                    ctx.moveTo(e.px, e.py);
+                    ctx.lineTo(e.qx, e.qy);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+                ctx.save();
+            }
+        }
+
+        function init() {
+
+            // clock(200, 200, 100);
+            // gravity();
+            // circle(300, 300, 5);
+            // sin(0, 300, 1);
+            // lizi();
+            // bub(5, Math.PI / 4, 10, 40, 400);
+            bTree();
+        }
+
+    </script>
+
+    <style rel="stylesheet" type="text/css">
+        #mycanvas {
+            background: whitesmoke;
+        }
+    </style>
+
+</head>
+
+<body onload="init()">
+    <canvas id="mycanvas" width="1000px" height="600px"></canvas>
+    <input type="text" id="node" width="50px" height="50px" />
+    <input type="button" id="ok" width="100px" height="50px" value="添加" />
+    <input type="button" id="cancel" width="100px" height="50px" value="删除" />
+    </div>
+
+</body>
+
+</html>
