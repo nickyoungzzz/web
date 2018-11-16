@@ -59,7 +59,6 @@ class Node {
             else
             {
                 throw new Error('无此节点');
-                return;
             }
         }
         else if (node.value > this.value)
@@ -71,7 +70,6 @@ class Node {
             else
             {
                 throw new Error('无此节点');
-                return;
             }
         }
         else
@@ -176,7 +174,10 @@ class Tree {
 
     draw1(callback) {
 
-        this.draw(this.head, callback);
+        if (this.head != null)
+        {
+            this.draw(this.head, callback);
+        }
     }
 
     push(n, callback) {
@@ -201,7 +202,9 @@ class Tree {
         {
             if (this.head.value == n)
             {
-                throw new Error('无法移除根节点');
+                this.head = null;
+                this.head.left = null;
+                this.head.right = null;
             }
             else
             {

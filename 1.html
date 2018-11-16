@@ -271,7 +271,7 @@
             var tree = new Tree();
             ctx.font = 'bold 20px Arial';
             ctx.textAlign = 'center';
-        
+
             // tree.draw1(function (e) {
             //     draw(e);
             // });
@@ -287,11 +287,9 @@
 
             cancel.onclick = function () {
 
-                try
-                {
+                try {
                     tree.delete(Number(input.value));
-                } catch (e)
-                {
+                } catch (e) {
                     alert(e);
                 }
                 input.value = '';
