@@ -11,6 +11,7 @@
     <script src="http://apps.bdimg.com/libs/prototype/1.7.1.0/prototype.js">
     </script>
     <script src="./tree.js"></script>
+    <script src="./three.js"></script>
     <script type="text/javascript">
 
         function clock(x, y, r) {
@@ -58,6 +59,8 @@
                     var m = t.getMinutes();
                     var s = t.getSeconds();
 
+                    var ms = t.getMilliseconds();
+
                     ctx.beginPath();
                     ctx.clearRect(150, 150, 100, 100);
                     ctx.arc(x, y, 3, 0, 2 * Math.PI);
@@ -75,10 +78,10 @@
                     ctx.lineTo(x + 30 * Math.sin(h * size + m / 60 * size), y - 30 * Math.cos(h * size + m / 60 * size));
 
                     ctx.moveTo(x, y);
-                    ctx.lineTo(x + 50 * Math.sin(s * size1), y - 50 * Math.cos(s * size1));
+                    ctx.lineTo(x + 50 * Math.sin((s + ms / 1000) * size1), y - 50 * Math.cos((s + ms / 1000) * size1));
 
                     ctx.stroke();
-                }, 1000);
+                }, 16);
 
             }
             else {
@@ -191,15 +194,15 @@
                         // var X = x + 160 * Math.pow(Math.sin(distance), 3) / 2;
                         // var Y = y - (130 * Math.cos(distance) - 50 * Math.cos(2 * distance) - 20 * Math.cos(3 * distance) - Math.cos(4 * distance)) / 2;
                         ctx.beginPath();
-                        // ctx.clearRect(0, 0, 800, 800);
+                        ctx.clearRect(0, 0, c.width, c.height);
                         // ctx.restore();
                         ctx.arc(X, Y, r, 0, 2 * Math.PI);
                         ctx.stroke();
-                        t = t + 16;
+                        t = t + 1;
                     }, 16);
                 }
             }
-            var ball = new Ball(300, 300, 30, 100);
+            var ball = new Ball(300, 300, 10, 100);
             ball.draw();
 
         }
@@ -222,40 +225,18 @@
             }, 16);
         }
 
-        function bub(r, arc, v, x, y) {
-            var t = 0;
-            var a = x;
-            var b = y;
+        function bub(x, y, r) {
+           
             var c = document.getElementById('mycanvas');
             var ctx = c.getContext('2d');
-            var vx = v * Math.cos(arc);
-            var vy = v * Math.sin(arc);
-
-            setInterval(function () {
-
-                if (a - r <= 0 || a + r >= 800) {
-
-                    vx = -vx;
-                    // t = 0;
-                }
-                else if (b + r >= 800 || b - r <= 0) {
-                    vy = -vy;
-                    // t = 0;
-                }
-
-                a += vx * t / 1000;
-                b += vy * t / 1000;
-                draw();
-
-                t += 16;
-            }, 16);
-
             var draw = function () {
                 ctx.beginPath();
-                ctx.clearRect(0, 0, 800, 800);
-                ctx.arc(a, b, r, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.clearRect(0, 0, c.width, c.height);
+                ctx.arc(x, y, r, 0, 2 * Math.PI);
+                ctx.ellipse(x, y, r, 200, 0, Math.PI*2);
+                ctx.stroke(); 
             }
+            draw();
 
         }
 
@@ -276,16 +257,16 @@
             //     draw(e);
             // });
 
-            ok.onclick = function () {
+            ok.onclick = () => {
                 tree.add(Number(input.value));
                 input.value = '';
                 ctx.clearRect(0, 0, c.width, c.height);
-                tree.draw1(function (e) {
+                tree.draw1((e) => {
                     draw(e);
                 });
             }
 
-            cancel.onclick = function () {
+            cancel.onclick = () => {
 
                 try {
                     tree.delete(Number(input.value));
@@ -317,17 +298,16 @@
                 ctx.save();
             }
         }
+            function init() {
 
-        function init() {
-
-            // clock(200, 200, 100);
-            // gravity();
-            // circle(300, 300, 5);
-            // sin(0, 300, 1);
-            // lizi();
-            // bub(5, Math.PI / 4, 10, 40, 400);
-            bTree();
-        }
+                // clock(200, 200, 100);
+                // gravity();
+                // circle(300, 300, 5);
+                // sin(0, 300, 1);
+                // lizi();
+                bub(400, 400, 100);
+                // bTree();
+            }
 
     </script>
 
